@@ -80,8 +80,7 @@ function refreshInterface() {
         outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
     });
     
-    process.stdout.write("\u001b[2J\u001b[0;0H");
-    console.log(outputText);
+    process.stdout.write("\u001b[2J\u001b[0;0H" + outputText);
 }
 
 function refreshData() {
