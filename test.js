@@ -8,23 +8,17 @@ function refreshInterface() {
     outputText = "========================================================";
     outputText += "\n" + stationName.padEnd((56 / 2) + stationName.length / 2, ".").padStart(56, ".");
     outputText += "\n" + `=============================================[${time}]=`;
-    var tram = [];
-    var sbahn = [];
-    var ubahn = [];
-    var bus = [];
+    var data = {"tram": [], "sbahn": [], "ubahn": []};
     currentData.forEach(line => {
         switch (line.lineType) {
             case 't':
-                tram.push(line);
+                data.tram.push(line);
                 break;
             case 'u':
-                ubahn.push(line);
-                break;
-            case 'b':
-                bus.push(line);
+                data.ubahn.push(line);
                 break;
             case 's':
-                sbahn.push(line);
+                data.sbahn.push(line);
                 break;
 
             default:
@@ -32,54 +26,23 @@ function refreshInterface() {
         }
     });
 
-    ubahn.forEach(line => {
-        let lineNr = (line.lineNumber + (line.lineType).toUpperCase()).padEnd("5", " ");
-        let destination = (line.lineDestination).padEnd("35", " ");
-        let departure;
-        if (line.lineDepartureIn <= 0) {
-            departure = "Jetzt"
-        } else {
-            departure = (line.lineDepartureIn + " Minuten").padEnd("10", " ");
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const element = data[key];
+            element.forEach(line => {
+                let lineNr = (line.lineNumber + (line.lineType).toUpperCase()).padEnd("5", " ");
+                let destination = (line.lineDestination).padEnd("35", " ");
+                let departure;
+                if (line.lineDepartureIn <= 0) {
+                    departure = "Jetzt"
+                } else {
+                    departure = (line.lineDepartureIn + " Minuten").padEnd("10", " ");
+                }
+                outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
+            });
+            outputText += "\n" + "--------------------------------------------------------";
         }
-        outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
-    });
-    outputText += "\n" + "--------------------------------------------------------";
-    tram.forEach(line => {
-        let lineNr = (line.lineNumber + (line.lineType).toUpperCase()).padEnd("5", " ");
-        let destination = (line.lineDestination).padEnd("35", " ");
-        let departure;
-        if (line.lineDepartureIn <= 0) {
-            departure = "Jetzt"
-        } else {
-            departure = (line.lineDepartureIn + " Minuten").padEnd("10", " ");
-        }
-        outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
-    });
-    outputText += "\n" + "--------------------------------------------------------";
-    sbahn.forEach(line => {
-        let lineNr = (line.lineNumber + (line.lineType).toUpperCase()).padEnd("5", " ");
-        let destination = (line.lineDestination).padEnd("35", " ");
-        let departure;
-        if (line.lineDepartureIn <= 0) {
-            departure = "Jetzt"
-        } else {
-            departure = (line.lineDepartureIn + " Minuten").padEnd("10", " ");
-        }
-        outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
-    });
-    outputText += "\n" + "--------------------------------------------------------";
-    bus.forEach(line => {
-        let lineNr = (line.lineNumber + (line.lineType).toUpperCase()).padEnd("5", " ");
-        let destination = (line.lineDestination).padEnd("35", " ");
-        let departure;
-        if (line.lineDepartureIn <= 0) {
-            departure = "Jetzt"
-        } else {
-            departure = (line.lineDepartureIn + " Minuten").padEnd("10", " ");
-        }
-        outputText += "\n" + `${lineNr} | ${destination} | ${departure}`;
-    });
-    
+    }
     process.stdout.write("\u001b[2J\u001b[0;0H" + outputText);
 }
 
